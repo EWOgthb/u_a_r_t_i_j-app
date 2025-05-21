@@ -22,7 +22,7 @@ if uploaded_file is not None:
         
         sb_count=content.count(sb_id)
         pr_count=content.count(pr_id)
-        new_file_name=f"converted_{ "to_PROD"if sb_count>0 else "to_Sandbox"}.json"
+        new_file_name=f"converted_{ 'to_PROD' if sb_count>0 else 'to_Sandbox'}.json"
         if sb_count > 0:
             new_content = content.replace(sb_id, pr_id)
             st.write(f"**{sb_count} Sandbox Resource ID replaced with Prod ID**")
