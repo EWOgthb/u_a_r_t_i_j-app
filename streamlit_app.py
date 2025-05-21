@@ -5,6 +5,7 @@ search_text = st.secrets["sb_id"]
 replace_with = st.secrets["pr_id"]
 
 st.info(f"Will replace all occurrences of: **{search_text}** with: **{replace_with}**")
+st.info(f"Will replace all occurrences of: **{search_text}** with: **{replace_with}**")
 
 # File uploader
 uploaded_file = st.file_uploader("Choose a JSON file", type=["json"])
