@@ -1,8 +1,8 @@
 import streamlit as st
 import json
 from io import StringIO
-search_text = "e844387f-ab63-4fd5-b601-b8d71c1bc561"
-replace_with = "088ad712-70ef-46ee-9d86-734dd1606ee7"
+search_text = st.secrets["sb_id"]
+replace_with = st.secrets["pr_id"]
 
 st.info(f"Will replace all occurrences of: **{search_text}** with: **{replace_with}**")
 
