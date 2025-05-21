@@ -1,11 +1,11 @@
 import streamlit as st
 import json
 from io import StringIO
-search_text = st.secrets["sb_id"]
-replace_with = st.secrets["pr_id"]
 
-st.info(f"Will replace all occurrences of: **{search_text}** with: **{replace_with}**")
-st.info(f"Will replace all occurrences of: **{search_text}** with: **{replace_with}**")
+sb_id = st.secrets["sb_id"]
+pr_id = st.secrets["pr_id"]
+
+st.info(f"Will replace all resource IDs in json file")
 
 # File uploader
 uploaded_file = st.file_uploader("Choose a JSON file", type=["json"])
@@ -17,30 +17,36 @@ if uploaded_file is not None:
         st.success("Valid JSON file detected")
         
         # Show original data
-        with st.expander("Original JSON data"):
-            st.json(json_data)
+        #with st.expander("Original JSON data"):
+        #  st.json(json_data)
         
-        # Perform replace
-        new_content = content.replace(search_text, replace_with)
+        sb_count=content.count(sb_id)
+        pr_count=content.count(pr_id)
+        new_file_name=f"converted_{ "to_PROD"if sb_count>0 else "to_Sandbox"}"
+        if sb_count > 0:
+            new_content = content.replace(sb_id, pr_id)
+            st.write(f"**{sb_count} Sandbox Resource ID replaced with Prod ID**")
+        elif pr_count > 0:
+            new_content = content.replace(pr_id, sb_id)
+            st.write(f"**{pr_count} Prod ID Resource ID replaced with Sandbox ID**")
+        else:
+            raise FileNotFoundError
+        
         modified_json = json.loads(new_content)
-        
-        # Count replacements
-        occurrences = content.count(search_text)
-        
-        # Show results
-        st.write(f"**Replaced {occurrences} occurrences**")
-        
-        with st.expander("Modified JSON data"):
-            st.json(modified_json)
+                
+        #with st.expander("Modified JSON data"):
+        #   st.json(modified_json)
         
         # Download button for modified file
         st.download_button(
             label="Download modified JSON",
             data=new_content,
-            file_name=f"modified_{uploaded_file.name}",
+            file_name=new_file_name,
             mime="application/json"
         )
         
     except json.JSONDecodeError:
         st.error("Invalid JSON file. Please upload a valid JSON file.")
+    except FileNotFoundError:
+        st.error("Json file doesn't contain Sandbox or Prod ID!")
         
